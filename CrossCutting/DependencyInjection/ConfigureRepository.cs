@@ -19,6 +19,8 @@ namespace CrossCutting.DependencyInjection
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IFreelancerRepository, FreelancerRepository>();
+            services.AddScoped<IHomeOfficeRepository, HomeOfficeRepository>();
         }
     }
 }

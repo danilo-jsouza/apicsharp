@@ -34,8 +34,7 @@ namespace Application
             services.AddRepositories();
             services.AddServices();
             services.AddApplicationDbContext(
-            options => options.UseMySql(""));
-
+    
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",

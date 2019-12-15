@@ -12,7 +12,8 @@ namespace CrossCutting.DependencyInjection
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<ICompanyService, CompanyService>();
-
+            services.AddScoped<IFreelancerService, FreelancerService>();
+            services.AddScoped<IHomeOfficeService, HomeOfficeService>();
         }
     }
 }

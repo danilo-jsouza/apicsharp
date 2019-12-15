@@ -19,5 +19,6 @@ namespace Domain.DTO.Response.Freelancer
         public string Description { get; set; }
         public string Portfolio { get; set; }
         public string Email { get; set; }
+        public bool Active { get; set; }
     }
 }

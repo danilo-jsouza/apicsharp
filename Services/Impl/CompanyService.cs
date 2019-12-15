@@ -73,6 +73,10 @@ namespace Services.Impl
             {
                 IQueryable<Company> query = _company;
                 var response = await query.FirstOrDefaultAsync(com => com.Id == id, ct);
+                
+                if (response == null)
+                    return false;
+
                 _company.Delete(response);
                 await _unit.CommitAsync(ct);
                 return true;
@@ -101,6 +105,10 @@ namespace Services.Impl
                         Id = com.Id,
                         Active = com.Active
                     }).ToListAsync(ct);
+
+                if (response == null)
+                    return null;
+
                 return response;
             }
             catch (Exception ex)
