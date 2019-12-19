@@ -2,6 +2,7 @@
 using Domain.DTO.Response.PhysicalPerson;
 using Domain.Exceptions;
 using Domain.Models;
+using Domain.Models.Adress;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
@@ -38,7 +39,12 @@ namespace Services.Impl
                         EntityId = Guid.NewGuid(),
                         Name = physicalPersonRequest.Name,
                         Sexo = physicalPersonRequest.Sexo,
-                        UserType = Domain.Enum.UserEnum.PhysicalPerson
+                        UserType = Domain.Enum.UserEnum.PhysicalPerson,
+                        PhysicalPersonAdress = new PhysicalPersonAdress
+                        {
+                            City = physicalPersonRequest.PhysicalPersonAdressRequest.City,
+                            State = physicalPersonRequest.PhysicalPersonAdressRequest.State
+                        }
                     };
                     _physicalPerson.Add(physicalPerson);
                     await _unit.CommitAsync(ct);
@@ -50,6 +56,8 @@ namespace Services.Impl
                     existingPhysicalPerson.Email = physicalPersonRequest.Email;
                     existingPhysicalPerson.Name = physicalPersonRequest.Name;
                     existingPhysicalPerson.Sexo = physicalPersonRequest.Sexo;
+                    existingPhysicalPerson.PhysicalPersonAdress.City = physicalPersonRequest.PhysicalPersonAdressRequest.City;
+                    existingPhysicalPerson.PhysicalPersonAdress.State = physicalPersonRequest.PhysicalPersonAdressRequest.State;
                     _physicalPerson.Update(existingPhysicalPerson);
                     await _unit.CommitAsync(ct);
                 }
@@ -60,11 +68,16 @@ namespace Services.Impl
                     Email = existingPhysicalPerson.Email,
                     Id = existingPhysicalPerson.Id,
                     Name = existingPhysicalPerson.Name,
-                    Sexo = existingPhysicalPerson.Sexo
+                    Sexo = existingPhysicalPerson.Sexo,
+                    PhysicalPersonAdressResponse = new PhysicalPersonAdressResponse
+                    {
+                        State = existingPhysicalPerson.PhysicalPersonAdress.State,
+                        City = existingPhysicalPerson.PhysicalPersonAdress.City
+                    }
                 };
 
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -85,7 +98,7 @@ namespace Services.Impl
                 await _unit.CommitAsync(ct);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -103,7 +116,12 @@ namespace Services.Impl
                     Email = phy.Name,
                     Id = phy.Id,
                     Name = phy.Name,
-                    Sexo = phy.Sexo
+                    Sexo = phy.Sexo,
+                    PhysicalPersonAdressResponse = new PhysicalPersonAdressResponse
+                    {
+                        City = phy.PhysicalPersonAdress.City,
+                        State = phy.PhysicalPersonAdress.State
+                    }
                 }).ToListAsync(ct);
 
                 if (physicalPerson == null)
@@ -111,7 +129,7 @@ namespace Services.Impl
 
                 return physicalPerson;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -134,10 +152,15 @@ namespace Services.Impl
                     Email = physicalPerson.Email,
                     Id = physicalPerson.Id,
                     Name = physicalPerson.Name,
-                    Sexo = physicalPerson.Sexo
+                    Sexo = physicalPerson.Sexo,
+                    PhysicalPersonAdressResponse = new PhysicalPersonAdressResponse
+                    {
+                        State = physicalPerson.PhysicalPersonAdress.State,
+                        City = physicalPerson.PhysicalPersonAdress.City
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }

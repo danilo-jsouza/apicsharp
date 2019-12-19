@@ -12,5 +12,6 @@ namespace Domain.DTO.Response.Company
         public string Cnpj { get; set; }
         public string Email { get; set; }
         public bool Active { get; set; }
+        public virtual CompanyAdressResponse CompanyAdressResponse { get; set; }
     }
 }

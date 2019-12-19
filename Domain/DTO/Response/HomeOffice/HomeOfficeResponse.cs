@@ -20,5 +20,6 @@ namespace Domain.DTO.Response.HomeOffice
         public string Description { get; set; }
         public string Portfolio { get; set; }
         public bool Active { get; set; }
+        public virtual HomeOfficeAdressResponse HomeOfficeAdressResponse { get; set; }
     }
 }

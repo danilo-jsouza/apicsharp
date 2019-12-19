@@ -2,6 +2,7 @@
 using Domain.DTO.Response.Freelancer;
 using Domain.Exceptions;
 using Domain.Models;
+using Domain.Models.Adress;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
@@ -42,7 +43,12 @@ namespace Services.Impl
                         Experience = freelancerRequest.Experience,
                         Description = freelancerRequest.Description,
                         UserType = Domain.Enum.UserEnum.Freelancer,
-                        Email = freelancerRequest.Email
+                        Email = freelancerRequest.Email,
+                        FreelancerAdress = new FreelancerAdress
+                        {
+                            State = freelancerRequest.FreelancerAdressRequest.State,
+                            City = freelancerRequest.FreelancerAdressRequest.City
+                        }
                     };
                     _freelancer.Add(freelancer);
                     existingFreelancer = freelancer;
@@ -57,6 +63,8 @@ namespace Services.Impl
                     existingFreelancer.Portfolio = freelancerRequest.Portfolio;
                     existingFreelancer.Sexo = freelancerRequest.Sexo;
                     existingFreelancer.Skills = freelancerRequest.Skills;
+                    existingFreelancer.FreelancerAdress.City = freelancerRequest.FreelancerAdressRequest.City;
+                    existingFreelancer.FreelancerAdress.State = freelancerRequest.FreelancerAdressRequest.State;
                     _freelancer.Update(existingFreelancer);
                 }
                 await _unit.CommitAsync(ct);
@@ -70,10 +78,15 @@ namespace Services.Impl
                     Name = existingFreelancer.Name,
                     Portfolio = existingFreelancer.Portfolio,
                     Sexo = existingFreelancer.Sexo,
-                    Skills = existingFreelancer.Skills
+                    Skills = existingFreelancer.Skills,
+                    FreelancerAdressResponse = new FreelancerAdressResponse
+                    {
+                        City = existingFreelancer.FreelancerAdress.City,
+                        State = existingFreelancer.FreelancerAdress.State
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -93,7 +106,7 @@ namespace Services.Impl
                 await _unit.CommitAsync(ct);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -115,7 +128,12 @@ namespace Services.Impl
                     Name = free.Name,
                     Portfolio = free.Portfolio,
                     Sexo = free.Sexo,
-                    Skills = free.Skills
+                    Skills = free.Skills,
+                    FreelancerAdressResponse = new FreelancerAdressResponse
+                    {
+                        City = free.FreelancerAdress.City,
+                        State = free.FreelancerAdress.State
+                    }
                 }).ToListAsync(ct);
 
                 if (freelancer == null)
@@ -123,7 +141,7 @@ namespace Services.Impl
 
                 return freelancer;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -150,10 +168,15 @@ namespace Services.Impl
                     Name = freelancer.Name,
                     Portfolio = freelancer.Portfolio,
                     Sexo = freelancer.Sexo,
-                    Skills = freelancer.Skills
+                    Skills = freelancer.Skills,
+                    FreelancerAdressResponse = new FreelancerAdressResponse
+                    {
+                        City = freelancer.FreelancerAdress.City,
+                        State = freelancer.FreelancerAdress.State
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }

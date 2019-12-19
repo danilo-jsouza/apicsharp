@@ -1,4 +1,5 @@
 ﻿using Application.ViewModel;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -29,8 +30,19 @@ namespace Application.Middleware
             }
             catch (Exception ex)
             {
-                x.Message = ex.Message;
-                x.StatusCode = (HttpStatusCode)statusCode;
+                if (ex is BasicException)
+                {
+                    var basicException = (BasicException)ex;
+                    statusCode = basicException.ERROR_CODE;
+                    x.Message = basicException.Message;
+
+                }
+                else
+                {
+                    statusCode = 500;
+                    x.Message = ex.Message;
+
+                }
 
                 var _objserialized = JsonConvert.SerializeObject(x);
 

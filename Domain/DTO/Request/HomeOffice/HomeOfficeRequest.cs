@@ -18,5 +18,6 @@ namespace Domain.DTO.Request.HomeOffice
         public string Experience { get; set; }
         public string Description { get; set; }
         public string Portfolio { get; set; }
+        public virtual HomeOfficeAdressRequest HomeOfficeAdressRequest { get; set; }
     }
 }

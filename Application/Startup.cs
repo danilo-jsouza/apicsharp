@@ -27,7 +27,7 @@ namespace Application
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddRepositories();
             services.AddServices();
-            services.AddApplicationDbContext(
+            //services.AddApplicationDbContext();
             
             services.AddSwaggerGen(c =>
             {

@@ -30,7 +30,7 @@ namespace Application.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CompanyResponse>), 200)]
-        public async Task<IActionResult> Get(CancellationToken ct)
+        public async Task<IActionResult> GetAll(CancellationToken ct)
         {
             var response = await _companyService.GetAllCompany(ct);
             return Ok(response);
@@ -39,7 +39,7 @@ namespace Application.Controllers
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(CompanyResponse), 200)]
-        public async Task<IActionResult> Get([FromRoute]int id, CancellationToken ct)
+        public async Task<IActionResult> GetPerId([FromRoute]int id, CancellationToken ct)
         {
             var response = await _companyService.GetPerIdCompany(id, ct);
             return Ok(response);

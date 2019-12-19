@@ -32,7 +32,7 @@ namespace Application.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<FreelancerResponse>), 200)]
-        public async Task<IActionResult> Get(CancellationToken ct)
+        public async Task<IActionResult> GetAll(CancellationToken ct)
         {
             var response = await _freelancerService.GetAllFreelancer(ct);
             return Ok(response);
@@ -41,7 +41,7 @@ namespace Application.Controllers
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(FreelancerResponse), 200)]
-        public async Task<IActionResult> Get([FromRoute] int id, CancellationToken ct)
+        public async Task<IActionResult> GetPerId([FromRoute] int id, CancellationToken ct)
         {
             var response = await _freelancerService.GetPerIdFreelancer(id, ct);
             return Ok(response);

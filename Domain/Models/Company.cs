@@ -1,4 +1,5 @@
 ﻿using Domain.Interface;
+using Domain.Models.Adress;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,5 +13,6 @@ namespace Domain.Models
         public string FantasyName { get; set; }
         public string CompanyName { get; set; }
         public string Cnpj { get; set; }
+        public virtual CompanyAdress CompanyAdress { get; set; }
     }
 }

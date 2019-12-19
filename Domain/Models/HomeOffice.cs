@@ -1,4 +1,5 @@
 ﻿using Domain.Enum;
+using Domain.Models.Adress;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -14,5 +15,6 @@ namespace Domain.Models
         public string Experience { get; set; }
         public string Description { get; set; }
         public string Portfolio { get; set; }
+        public virtual HomeOfficeAdress HomeOfficeAdress { get; set; } 
     }
 }

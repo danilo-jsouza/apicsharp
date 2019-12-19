@@ -33,7 +33,7 @@ namespace Application.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PhysicalPersonResponse>), 200)]
-        public async Task<IActionResult> Get(CancellationToken ct)
+        public async Task<IActionResult> GetAll(CancellationToken ct)
         {
             var response = await _physicalPerson.GetAllPhysicalPerson(ct);
             return Ok(response);
@@ -42,7 +42,7 @@ namespace Application.Controllers
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(PhysicalPersonResponse), 200)]
-        public async Task<IActionResult> Get([FromRoute] int id, CancellationToken ct)
+        public async Task<IActionResult> GetPerId([FromRoute] int id, CancellationToken ct)
         {
             var response = await _physicalPerson.GetPerIdPhysicalPerson(id, ct);
             return Ok(response);

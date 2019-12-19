@@ -2,6 +2,7 @@
 using Domain.DTO.Response.Company;
 using Domain.Exceptions;
 using Domain.Models;
+using Domain.Models.Adress;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
@@ -38,7 +39,12 @@ namespace Services.Impl
                         FantasyName = companyRequest.FantasyName,
                         Email = companyRequest.Email,
                         Cnpj = companyRequest.Cnpj,
-                        UserType = Domain.Enum.UserEnum.Company
+                        UserType = Domain.Enum.UserEnum.Company,
+                        CompanyAdress = new CompanyAdress
+                        {
+                            City = companyRequest.CompanyAdressRequest.City,
+                            State = companyRequest.CompanyAdressRequest.State
+                        }
                     };
                     _company.Add(company);
                     existingCompany = company;
@@ -48,6 +54,8 @@ namespace Services.Impl
                     existingCompany.CompanyName = companyRequest.CompanyName;
                     existingCompany.FantasyName = companyRequest.FantasyName;
                     existingCompany.Email = companyRequest.Email;
+                    existingCompany.CompanyAdress.State = companyRequest.CompanyAdressRequest.State;
+                    existingCompany.CompanyAdress.City = companyRequest.CompanyAdressRequest.City;
                     _company.Update(existingCompany);
                 }
                 await _unit.CommitAsync(ct);
@@ -57,10 +65,15 @@ namespace Services.Impl
                     CompanyName = existingCompany.CompanyName,
                     FantasyName = existingCompany.FantasyName,
                     Cnpj = existingCompany.Cnpj,
-                    Email = existingCompany.Email
+                    Email = existingCompany.Email,
+                    CompanyAdressResponse = new CompanyAdressResponse
+                    {
+                        City = existingCompany.CompanyAdress.City,
+                        State = existingCompany.CompanyAdress.State
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -80,7 +93,7 @@ namespace Services.Impl
                 await _unit.CommitAsync(ct);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -102,7 +115,12 @@ namespace Services.Impl
                         FantasyName = com.FantasyName,
                         CompanyName = com.CompanyName,
                         Id = com.Id,
-                        Active = com.Active
+                        Active = com.Active,
+                        CompanyAdressResponse = new CompanyAdressResponse
+                        {
+                            City = com.CompanyAdress.City,
+                            State = com.CompanyAdress.State
+                        }
                     }).ToListAsync(ct);
 
                 if (company == null)
@@ -110,7 +128,7 @@ namespace Services.Impl
 
                 return company;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -133,11 +151,16 @@ namespace Services.Impl
                     FantasyName = company.FantasyName,
                     Cnpj = company.Cnpj,
                     Email = company.Email,
-                    Active = company.Active
+                    Active = company.Active,
+                    CompanyAdressResponse = new CompanyAdressResponse
+                    {
+                        City = company.CompanyAdress.City,
+                        State = company.CompanyAdress.State
+                    }
                 };
 
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }

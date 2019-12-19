@@ -2,6 +2,7 @@
 using Domain.DTO.Response.HomeOffice;
 using Domain.Exceptions;
 using Domain.Models;
+using Domain.Models.Adress;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
@@ -43,7 +44,12 @@ namespace Services.Impl
                         Portfolio = homeOfficeRequest.Portfolio,
                         Sexo = homeOfficeRequest.Sexo,
                         Skills = homeOfficeRequest.Skills,
-                        UserType = Domain.Enum.UserEnum.HomeOffice
+                        UserType = Domain.Enum.UserEnum.HomeOffice,
+                        HomeOfficeAdress = new HomeOfficeAdress
+                        {
+                            State = homeOfficeRequest.HomeOfficeAdressRequest.State,
+                            City = homeOfficeRequest.HomeOfficeAdressRequest.City
+                        }
                     };
                     _homeOffice.Add(homeOffice);
                     await _unit.CommitAsync(ct);
@@ -59,6 +65,8 @@ namespace Services.Impl
                     existingHomeOffice.Portfolio = homeOfficeRequest.Portfolio;
                     existingHomeOffice.Sexo = homeOfficeRequest.Sexo;
                     existingHomeOffice.Skills = homeOfficeRequest.Skills;
+                    existingHomeOffice.HomeOfficeAdress.City = homeOfficeRequest.HomeOfficeAdressRequest.City;
+                    existingHomeOffice.HomeOfficeAdress.State = homeOfficeRequest.HomeOfficeAdressRequest.State;
                     _homeOffice.Update(existingHomeOffice);
                     await _unit.CommitAsync(ct);
                 }
@@ -74,10 +82,15 @@ namespace Services.Impl
                     Portfolio = existingHomeOffice.Portfolio,
                     Sexo = existingHomeOffice.Sexo,
                     Skills = existingHomeOffice.Skills,
-                    Active = existingHomeOffice.Active
+                    Active = existingHomeOffice.Active,
+                    HomeOfficeAdressResponse = new HomeOfficeAdressResponse
+                    {
+                        State = existingHomeOffice.HomeOfficeAdress.State,
+                        City = existingHomeOffice.HomeOfficeAdress.City
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -97,7 +110,7 @@ namespace Services.Impl
                 await _unit.CommitAsync(ct);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -119,7 +132,12 @@ namespace Services.Impl
                     Portfolio = hom.Portfolio,
                     Sexo = hom.Sexo,
                     Skills = hom.Skills,
-                    Active = hom.Active
+                    Active = hom.Active,
+                    HomeOfficeAdressResponse = new HomeOfficeAdressResponse
+                    {
+                        City = hom.HomeOfficeAdress.City,
+                        State = hom.HomeOfficeAdress.State
+                    }
                 }).ToListAsync(ct);
 
                 if (homeOffice == null)
@@ -127,7 +145,7 @@ namespace Services.Impl
 
                 return homeOffice;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }
@@ -154,10 +172,15 @@ namespace Services.Impl
                     Portfolio = homeOffice.Portfolio,
                     Sexo = homeOffice.Sexo,
                     Skills = homeOffice.Skills,
-                    Active = homeOffice.Active
+                    Active = homeOffice.Active,
+                    HomeOfficeAdressResponse = new HomeOfficeAdressResponse
+                    {
+                        State = homeOffice.HomeOfficeAdress.State,
+                        City = homeOffice.HomeOfficeAdress.City
+                    }
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is BasicException))
             {
                 throw new InternalServerError("Error processing your request.", ex);
             }

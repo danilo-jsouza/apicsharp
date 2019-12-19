@@ -15,5 +15,6 @@ namespace Domain.DTO.Response.PhysicalPerson
         [JsonConverter(typeof(StringEnumConverter))]
         public SexoEnum Sexo { get; set; }
         public string Email { get; set; }
+        public virtual PhysicalPersonAdressResponse PhysicalPersonAdressResponse { get; set; }
     }
 }

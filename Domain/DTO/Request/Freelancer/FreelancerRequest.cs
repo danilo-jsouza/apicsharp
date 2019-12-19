@@ -18,5 +18,6 @@ namespace Domain.DTO.Request.Freelancer
         public string Description { get; set; }
         public string Portfolio { get; set; }
         public string Email { get; set; }
+        public virtual FreelancerAdressRequest FreelancerAdressRequest { get; set; }
     }
 }

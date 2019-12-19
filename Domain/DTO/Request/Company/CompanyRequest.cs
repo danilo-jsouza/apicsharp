@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models.Adress;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,6 @@ namespace Domain.DTO.Request.Company
         public string CompanyName { get; set; }
         public string Cnpj { get; set; }
         public string Email { get; set; }
+        public virtual CompanyAdressRequest CompanyAdressRequest { get; set; }
     }
 }
