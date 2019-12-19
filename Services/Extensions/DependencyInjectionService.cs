@@ -5,15 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrossCutting.DependencyInjection
+namespace Services.Extensions
 {
-    public static class ConfigureService
+    public static class DependencyInjectionService
     {
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IFreelancerService, FreelancerService>();
             services.AddScoped<IHomeOfficeService, HomeOfficeService>();
+            services.AddScoped<IPhysicalPersonService, PhysicalPersonService>();
         }
     }
 }

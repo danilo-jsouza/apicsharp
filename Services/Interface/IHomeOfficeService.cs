@@ -10,7 +10,7 @@ namespace Services.Interface
 {
     public interface IHomeOfficeService
     {
-        Task<HomeOfficeResponse> CreateHomeOffice(HomeOfficeRequest request, CancellationToken ct);
+        Task<HomeOfficeResponse> CreateHomeOffice(HomeOfficeRequest homeOfficeRequest, CancellationToken ct);
         Task<IEnumerable<HomeOfficeResponse>> GetAllHomeOffice(CancellationToken ct);
         Task<HomeOfficeResponse> GetPerIdHomeOffice(int id, CancellationToken ct);
         Task<bool> DeleteHomeOffice(int id, CancellationToken ct);

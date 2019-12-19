@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Request.Company;
+using Domain.DTO.Response.Company;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 using System;
@@ -20,13 +21,15 @@ namespace Application.Controllers
             _companyService = companyService;
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CompanyRequest company, CancellationToken ct)
+        [ProducesResponseType(typeof(CompanyResponse), 200)]
+        public async Task<IActionResult> Post([FromBody] CompanyRequest companyRequest, CancellationToken ct)
         {
-            var response = await _companyService.CreateCompany(company, ct);
+            var response = await _companyService.CreateCompany(companyRequest, ct);
             return Ok(response);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CompanyResponse>), 200)]
         public async Task<IActionResult> Get(CancellationToken ct)
         {
             var response = await _companyService.GetAllCompany(ct);
@@ -35,6 +38,7 @@ namespace Application.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(typeof(CompanyResponse), 200)]
         public async Task<IActionResult> Get([FromRoute]int id, CancellationToken ct)
         {
             var response = await _companyService.GetPerIdCompany(id, ct);
@@ -43,6 +47,7 @@ namespace Application.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken ct)
         {
             var response = await _companyService.DeleteCompany(id, ct);

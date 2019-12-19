@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Middleware;
-using CrossCutting.DependencyInjection;
-using Infra.Data.Context;
+﻿using Application.Middleware;
+using Infra.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +7,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Services.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Application
@@ -34,7 +28,7 @@ namespace Application
             services.AddRepositories();
             services.AddServices();
             services.AddApplicationDbContext(
-    
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",

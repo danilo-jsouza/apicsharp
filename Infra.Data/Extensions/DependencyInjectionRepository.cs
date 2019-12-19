@@ -7,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrossCutting.DependencyInjection
+namespace Infra.Data.Extensions
 {
-    public static class ConfigureRepository
+    public static class DependencyInjectionRepository
     {
         public static void AddApplicationDbContext(this IServiceCollection services, Action<DbContextOptionsBuilder> optionsAction)
         {
@@ -21,6 +21,7 @@ namespace CrossCutting.DependencyInjection
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IFreelancerRepository, FreelancerRepository>();
             services.AddScoped<IHomeOfficeRepository, HomeOfficeRepository>();
+            services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>();
         }
     }
 }

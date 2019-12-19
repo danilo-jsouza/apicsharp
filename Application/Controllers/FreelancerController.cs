@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.DTO.Request.Freelancer;
+using Domain.DTO.Response.Freelancer;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 
@@ -22,6 +23,7 @@ namespace Application.Controllers
             _freelancerService = freelancerService;
         }
         [HttpPost]
+        [ProducesResponseType(typeof(FreelancerResponse), 200)]
         public async Task<IActionResult> Post([FromBody]FreelancerRequest freelancerRequest, CancellationToken ct)
         {
             var response = await _freelancerService.CreateFreelancer(freelancerRequest, ct);
@@ -29,6 +31,7 @@ namespace Application.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<FreelancerResponse>), 200)]
         public async Task<IActionResult> Get(CancellationToken ct)
         {
             var response = await _freelancerService.GetAllFreelancer(ct);
@@ -37,6 +40,7 @@ namespace Application.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(typeof(FreelancerResponse), 200)]
         public async Task<IActionResult> Get([FromRoute] int id, CancellationToken ct)
         {
             var response = await _freelancerService.GetPerIdFreelancer(id, ct);
@@ -45,6 +49,7 @@ namespace Application.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken ct)
         {
             var response = await _freelancerService.DeleteFreelancer(id, ct);

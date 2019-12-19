@@ -1,5 +1,6 @@
 ﻿using Domain.DTO.Request.Company;
 using Domain.DTO.Response.Company;
+using Domain.Exceptions;
 using Domain.Models;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +51,7 @@ namespace Services.Impl
                     _company.Update(existingCompany);
                 }
                 await _unit.CommitAsync(ct);
-                var response = new CompanyResponse
+                return new CompanyResponse
                 {
                     Id = existingCompany.Id,
                     CompanyName = existingCompany.CompanyName,
@@ -58,12 +59,10 @@ namespace Services.Impl
                     Cnpj = existingCompany.Cnpj,
                     Email = existingCompany.Email
                 };
-
-                return response;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
         }
 
@@ -72,20 +71,20 @@ namespace Services.Impl
             try
             {
                 IQueryable<Company> query = _company;
-                var response = await query.FirstOrDefaultAsync(com => com.Id == id, ct);
-                
-                if (response == null)
-                    return false;
+                var company = await query.FirstOrDefaultAsync(com => com.Id == id, ct);
 
-                _company.Delete(response);
+                if (company == null)
+                    throw new NotFoundException("Company not found.");
+
+                _company.Delete(company);
                 await _unit.CommitAsync(ct);
                 return true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
-            
+
         }
 
         public async Task<IEnumerable<CompanyResponse>> GetAllCompany(CancellationToken ct)
@@ -93,7 +92,7 @@ namespace Services.Impl
             try
             {
                 IQueryable<Company> query = _company;
-                var response = await query
+                var company = await query
                     .OrderBy(com => com.CompanyName)
                     .Take(100)
                     .Select(com => new CompanyResponse
@@ -106,15 +105,14 @@ namespace Services.Impl
                         Active = com.Active
                     }).ToListAsync(ct);
 
-                if (response == null)
-                    return null;
+                if (company == null)
+                    throw new NotFoundException("Company not found.");
 
-                return response;
+                return company;
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
         }
 
@@ -123,25 +121,25 @@ namespace Services.Impl
             try
             {
                 IQueryable<Company> query = _company;
-                var response = await query.FirstOrDefaultAsync(com => com.Id == id, ct);
+                var company = await query.FirstOrDefaultAsync(com => com.Id == id, ct);
 
-                if (response == null)
-                    return null;
+                if (company == null)
+                    throw new NotFoundException("Company not found.");
 
                 return new CompanyResponse
                 {
-                    Id = response.Id,
-                    CompanyName = response.CompanyName,
-                    FantasyName = response.FantasyName,
-                    Cnpj = response.Cnpj,
-                    Email = response.Email,
-                    Active = response.Active
+                    Id = company.Id,
+                    CompanyName = company.CompanyName,
+                    FantasyName = company.FantasyName,
+                    Cnpj = company.Cnpj,
+                    Email = company.Email,
+                    Active = company.Active
                 };
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
         }
     }

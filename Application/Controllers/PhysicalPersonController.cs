@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.DTO.Request.HomeOffice;
-using Domain.DTO.Response.HomeOffice;
+using Domain.DTO.Request.PhysicalPerson;
+using Domain.DTO.Response.PhysicalPerson;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 
@@ -14,37 +14,37 @@ namespace Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HomeOfficeController : ControllerBase
+    public class PhysicalPersonController : ControllerBase
     {
-        private readonly IHomeOfficeService _homeOffice;
+        private readonly IPhysicalPersonService _physicalPerson;
 
-        public HomeOfficeController(IHomeOfficeService homeOffice)
+        public PhysicalPersonController(IPhysicalPersonService physicalPerson)
         {
-            _homeOffice = homeOffice;
+            _physicalPerson = physicalPerson;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(HomeOfficeResponse), 200)]
-        public async Task<IActionResult> Post([FromBody] HomeOfficeRequest homeOfficeRequest, CancellationToken ct)
+        [ProducesResponseType(typeof(PhysicalPersonResponse), 200)]
+        public async Task<IActionResult> Post(PhysicalPersonRequest physicalPersonRequest, CancellationToken ct)
         {
-            var response = await _homeOffice.CreateHomeOffice(homeOfficeRequest, ct);
+            var response = await _physicalPerson.CreatePhysicalPerson(physicalPersonRequest, ct);
             return Ok(response);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<HomeOfficeResponse>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<PhysicalPersonResponse>), 200)]
         public async Task<IActionResult> Get(CancellationToken ct)
         {
-            var response = await _homeOffice.GetAllHomeOffice(ct);
+            var response = await _physicalPerson.GetAllPhysicalPerson(ct);
             return Ok(response);
         }
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(typeof(HomeOfficeResponse), 200)]
+        [ProducesResponseType(typeof(PhysicalPersonResponse), 200)]
         public async Task<IActionResult> Get([FromRoute] int id, CancellationToken ct)
         {
-            var response = await _homeOffice.GetPerIdHomeOffice(id, ct);
+            var response = await _physicalPerson.GetPerIdPhysicalPerson(id, ct);
             return Ok(response);
         }
 
@@ -53,7 +53,7 @@ namespace Application.Controllers
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken ct)
         {
-            var response = await _homeOffice.DeleteHomeOffice(id, ct);
+            var response = await _physicalPerson.DeletePhysicalPerson(id, ct);
             return Ok(response);
         }
     }

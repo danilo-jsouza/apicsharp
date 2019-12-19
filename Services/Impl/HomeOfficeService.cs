@@ -1,5 +1,6 @@
 ﻿using Domain.DTO.Request.HomeOffice;
 using Domain.DTO.Response.HomeOffice;
+using Domain.Exceptions;
 using Domain.Models;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,113 +25,142 @@ namespace Services.Impl
             _unit = unit;
         }
 
-        public async Task<HomeOfficeResponse> CreateHomeOffice(HomeOfficeRequest request, CancellationToken ct)
+        public async Task<HomeOfficeResponse> CreateHomeOffice(HomeOfficeRequest homeOfficeRequest, CancellationToken ct)
         {
-            HomeOffice existingHomeOffice = await _homeOffice.FirstOrDefaultAsync(hom => hom.Cpf == request.Cpf, ct);
-            if(existingHomeOffice == null)
+            try
             {
-                var homeOffice = new HomeOffice
+                HomeOffice existingHomeOffice = await _homeOffice.FirstOrDefaultAsync(hom => hom.Cpf == homeOfficeRequest.Cpf, ct);
+                if (existingHomeOffice == null)
                 {
-                    Cpf = request.Cpf,
-                    Description = request.Description,
-                    Email = request.Email,
-                    EntityId = Guid.NewGuid(),
-                    Experience = request.Experience,
-                    Name = request.Name,
-                    Portfolio = request.Portfolio,
-                    Sexo = request.Sexo,
-                    Skills = request.Skills,
-                    UserType = Domain.Enum.UserEnum.HomeOffice
-                };
-                _homeOffice.Add(homeOffice);
-                await _unit.CommitAsync(ct);
-            }
-            else
-            {
-                existingHomeOffice.Cpf = request.Cpf;
-                existingHomeOffice.Description = request.Description;
-                existingHomeOffice.Email = request.Email;
-                existingHomeOffice.Experience = request.Experience;
-                existingHomeOffice.Name = request.Name;
-                existingHomeOffice.Portfolio = request.Portfolio;
-                existingHomeOffice.Sexo = request.Sexo;
-                existingHomeOffice.Skills = request.Skills;
-                _homeOffice.Update(existingHomeOffice);
-                await _unit.CommitAsync(ct);
-            }
+                    var homeOffice = new HomeOffice
+                    {
+                        Cpf = homeOfficeRequest.Cpf,
+                        Description = homeOfficeRequest.Description,
+                        Email = homeOfficeRequest.Email,
+                        EntityId = Guid.NewGuid(),
+                        Experience = homeOfficeRequest.Experience,
+                        Name = homeOfficeRequest.Name,
+                        Portfolio = homeOfficeRequest.Portfolio,
+                        Sexo = homeOfficeRequest.Sexo,
+                        Skills = homeOfficeRequest.Skills,
+                        UserType = Domain.Enum.UserEnum.HomeOffice
+                    };
+                    _homeOffice.Add(homeOffice);
+                    await _unit.CommitAsync(ct);
+                    existingHomeOffice = homeOffice;
+                }
+                else
+                {
+                    existingHomeOffice.Cpf = homeOfficeRequest.Cpf;
+                    existingHomeOffice.Description = homeOfficeRequest.Description;
+                    existingHomeOffice.Email = homeOfficeRequest.Email;
+                    existingHomeOffice.Experience = homeOfficeRequest.Experience;
+                    existingHomeOffice.Name = homeOfficeRequest.Name;
+                    existingHomeOffice.Portfolio = homeOfficeRequest.Portfolio;
+                    existingHomeOffice.Sexo = homeOfficeRequest.Sexo;
+                    existingHomeOffice.Skills = homeOfficeRequest.Skills;
+                    _homeOffice.Update(existingHomeOffice);
+                    await _unit.CommitAsync(ct);
+                }
 
-            return new HomeOfficeResponse
+                return new HomeOfficeResponse
+                {
+                    Cpf = existingHomeOffice.Cpf,
+                    Description = existingHomeOffice.Description,
+                    Email = existingHomeOffice.Email,
+                    Experience = existingHomeOffice.Experience,
+                    Id = existingHomeOffice.Id,
+                    Name = existingHomeOffice.Name,
+                    Portfolio = existingHomeOffice.Portfolio,
+                    Sexo = existingHomeOffice.Sexo,
+                    Skills = existingHomeOffice.Skills,
+                    Active = existingHomeOffice.Active
+                };
+            }
+            catch (Exception ex)
             {
-                Cpf = existingHomeOffice.Cpf,
-                Description = existingHomeOffice.Description,
-                Email = existingHomeOffice.Email,
-                Experience = existingHomeOffice.Experience,
-                Id = existingHomeOffice.Id,
-                Name = existingHomeOffice.Name,
-                Portfolio = existingHomeOffice.Portfolio,
-                Sexo = existingHomeOffice.Sexo,
-                Skills = existingHomeOffice.Skills,
-                Active = existingHomeOffice.Active
-            };
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
 
         public async Task<bool> DeleteHomeOffice(int id, CancellationToken ct)
         {
-            IQueryable<HomeOffice> query = _homeOffice;
-            var response = await query.FirstOrDefaultAsync(hom => hom.Id == id, ct);
+            try
+            {
+                IQueryable<HomeOffice> query = _homeOffice;
+                var homeOffice = await query.FirstOrDefaultAsync(hom => hom.Id == id, ct);
 
-            if (response == null)
-                return false;
+                if (homeOffice == null)
+                    throw new NotFoundException("Home Office not found.");
 
-            _homeOffice.Delete(response);
-            await _unit.CommitAsync(ct);
-            return true;
+                _homeOffice.Delete(homeOffice);
+                await _unit.CommitAsync(ct);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
 
         public async Task<IEnumerable<HomeOfficeResponse>> GetAllHomeOffice(CancellationToken ct)
         {
-            IQueryable<HomeOffice> query = _homeOffice;
-            var response = await query.OrderBy(hom => hom.Name).Select(hom => new HomeOfficeResponse
+            try
             {
-                Cpf = hom.Cpf,
-                Description = hom.Description,
-                Email = hom.Email,
-                Experience = hom.Experience,
-                Id = hom.Id,
-                Name = hom.Name,
-                Portfolio = hom.Portfolio,
-                Sexo = hom.Sexo,
-                Skills = hom.Skills,
-                Active = hom.Active
-            }).ToListAsync(ct);
+                IQueryable<HomeOffice> query = _homeOffice;
+                var homeOffice = await query.OrderBy(hom => hom.Name).Select(hom => new HomeOfficeResponse
+                {
+                    Cpf = hom.Cpf,
+                    Description = hom.Description,
+                    Email = hom.Email,
+                    Experience = hom.Experience,
+                    Id = hom.Id,
+                    Name = hom.Name,
+                    Portfolio = hom.Portfolio,
+                    Sexo = hom.Sexo,
+                    Skills = hom.Skills,
+                    Active = hom.Active
+                }).ToListAsync(ct);
 
-            if (response == null)
-                return null;
+                if (homeOffice == null)
+                    throw new NotFoundException("Home Office not found.");
 
-            return response;
+                return homeOffice;
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
 
         public async Task<HomeOfficeResponse> GetPerIdHomeOffice(int id, CancellationToken ct)
         {
-            IQueryable<HomeOffice> query = _homeOffice;
-            var response = await query.FirstOrDefaultAsync(hom => hom.Id == id, ct);
-
-            if (response == null)
-                return null;
-
-            return new HomeOfficeResponse
+            try
             {
-                Cpf = response.Cpf,
-                Description = response.Description,
-                Email = response.Email,
-                Experience = response.Experience,
-                Id = response.Id,
-                Name = response.Name,
-                Portfolio = response.Portfolio,
-                Sexo = response.Sexo,
-                Skills = response.Skills,
-                Active = response.Active
-            };
+                IQueryable<HomeOffice> query = _homeOffice;
+                var homeOffice = await query.FirstOrDefaultAsync(hom => hom.Id == id, ct);
+
+                if (homeOffice == null)
+                    throw new NotFoundException("Home Office not found.");
+
+                return new HomeOfficeResponse
+                {
+                    Cpf = homeOffice.Cpf,
+                    Description = homeOffice.Description,
+                    Email = homeOffice.Email,
+                    Experience = homeOffice.Experience,
+                    Id = homeOffice.Id,
+                    Name = homeOffice.Name,
+                    Portfolio = homeOffice.Portfolio,
+                    Sexo = homeOffice.Sexo,
+                    Skills = homeOffice.Skills,
+                    Active = homeOffice.Active
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
     }
 }

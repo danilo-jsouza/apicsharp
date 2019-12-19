@@ -1,5 +1,6 @@
 ﻿using Domain.DTO.Request.Freelancer;
 using Domain.DTO.Response.Freelancer;
+using Domain.Exceptions;
 using Domain.Models;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -74,21 +75,28 @@ namespace Services.Impl
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
         }
 
         public async Task<bool> DeleteFreelancer(int id, CancellationToken ct)
         {
-            IQueryable<Freelancer> query = _freelancer;
-            var response = await query.FirstOrDefaultAsync(free => free.Id == id, ct);
+            try
+            {
+                IQueryable<Freelancer> query = _freelancer;
+                var freelancer = await query.FirstOrDefaultAsync(free => free.Id == id, ct);
 
-            if (response == null)
-                return false;
+                if (freelancer == null)
+                    throw new NotFoundException("Freelancer not found.");
 
-            _freelancer.Delete(response);
-            await _unit.CommitAsync(ct);
-            return true;
+                _freelancer.Delete(freelancer);
+                await _unit.CommitAsync(ct);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
 
         public async Task<IEnumerable<FreelancerResponse>> GetAllFreelancer(CancellationToken ct)
@@ -96,7 +104,7 @@ namespace Services.Impl
             try
             {
                 IQueryable<Freelancer> query = _freelancer;
-                var response = await query.OrderBy(free => free.Name).Select(free => new FreelancerResponse
+                var freelancer = await query.OrderBy(free => free.Name).Select(free => new FreelancerResponse
                 {
                     Active = free.Active,
                     Cpf = free.Cpf,
@@ -110,38 +118,45 @@ namespace Services.Impl
                     Skills = free.Skills
                 }).ToListAsync(ct);
 
-                if (response == null)
-                    return null;
+                if (freelancer == null)
+                    throw new NotFoundException("Freelancer not found.");
 
-                return response;
+                return freelancer;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InternalServerError("Error processing your request.", ex);
             }
         }
 
         public async Task<FreelancerResponse> GetPerIdFreelancer(int id, CancellationToken ct)
         {
-            IQueryable<Freelancer> query = _freelancer;
-            var response = await query.FirstOrDefaultAsync(free => free.Id == id, ct);
-
-            if (response == null)
-                return null;
-
-            return new FreelancerResponse
+            try
             {
-                Active = response.Active,
-                Cpf = response.Cpf,
-                Description = response.Description,
-                Email = response.Email,
-                Experience = response.Experience,
-                Id = response.Id,
-                Name = response.Name,
-                Portfolio = response.Portfolio,
-                Sexo = response.Sexo,
-                Skills = response.Skills
-            };
+                IQueryable<Freelancer> query = _freelancer;
+                var freelancer = await query.FirstOrDefaultAsync(free => free.Id == id, ct);
+
+                if (freelancer == null)
+                    throw new NotFoundException("Freelancer not found.");
+
+                return new FreelancerResponse
+                {
+                    Active = freelancer.Active,
+                    Cpf = freelancer.Cpf,
+                    Description = freelancer.Description,
+                    Email = freelancer.Email,
+                    Experience = freelancer.Experience,
+                    Id = freelancer.Id,
+                    Name = freelancer.Name,
+                    Portfolio = freelancer.Portfolio,
+                    Sexo = freelancer.Sexo,
+                    Skills = freelancer.Skills
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerError("Error processing your request.", ex);
+            }
         }
     }
 }
