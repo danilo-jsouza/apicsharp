@@ -48,7 +48,15 @@ namespace Services.Impl
                         {
                             State = freelancerRequest.FreelancerAdressRequest.State,
                             City = freelancerRequest.FreelancerAdressRequest.City
-                        }
+                        },
+                        FreelancerFormation = freelancerRequest.FreelancerFormationRequest.Select(freeForm => new FreelancerFormation
+                        {
+                            Type = freeForm.Type,
+                            Course = freeForm.Course,
+                            School = freeForm.School,
+                            Start = freeForm.Start,
+                            End = freeForm.End
+                        })
                     };
                     _freelancer.Add(freelancer);
                     existingFreelancer = freelancer;
@@ -65,6 +73,14 @@ namespace Services.Impl
                     existingFreelancer.Skills = freelancerRequest.Skills;
                     existingFreelancer.FreelancerAdress.City = freelancerRequest.FreelancerAdressRequest.City;
                     existingFreelancer.FreelancerAdress.State = freelancerRequest.FreelancerAdressRequest.State;
+                    existingFreelancer.FreelancerFormation = freelancerRequest.FreelancerFormationRequest.Select(freeForm => new FreelancerFormation
+                    {
+                        Type = freeForm.Type,
+                        Course = freeForm.Course,
+                        School = freeForm.School,
+                        Start = freeForm.Start,
+                        End = freeForm.End
+                    });
                     _freelancer.Update(existingFreelancer);
                 }
                 await _unit.CommitAsync(ct);
@@ -83,7 +99,15 @@ namespace Services.Impl
                     {
                         City = existingFreelancer.FreelancerAdress.City,
                         State = existingFreelancer.FreelancerAdress.State
-                    }
+                    },
+                    FreelancerFormationResponse = existingFreelancer.FreelancerFormation.Select(freeForm => new FreelancerFormationResponse
+                    {
+                        Type = freeForm.Type,
+                        Course = freeForm.Course,
+                        School = freeForm.School,
+                        Start = freeForm.Start,
+                        End = freeForm.End
+                    })
                 };
             }
             catch (Exception ex) when (!(ex is BasicException))
@@ -133,7 +157,15 @@ namespace Services.Impl
                     {
                         City = free.FreelancerAdress.City,
                         State = free.FreelancerAdress.State
-                    }
+                    },
+                    FreelancerFormationResponse = free.FreelancerFormation.Select(freeForm => new FreelancerFormationResponse
+                    {
+                        Type = freeForm.Type,
+                        Course = freeForm.Course,
+                        School = freeForm.School,
+                        Start = freeForm.Start,
+                        End = freeForm.End
+                    })
                 }).ToListAsync(ct);
 
                 if (freelancer == null)
@@ -173,7 +205,15 @@ namespace Services.Impl
                     {
                         City = freelancer.FreelancerAdress.City,
                         State = freelancer.FreelancerAdress.State
-                    }
+                    },
+                    FreelancerFormationResponse = freelancer.FreelancerFormation.Select(freeForm => new FreelancerFormationResponse
+                    {
+                        Type = freeForm.Type,
+                        Course = freeForm.Course,
+                        School = freeForm.School,
+                        Start = freeForm.Start,
+                        End = freeForm.End
+                    })
                 };
             }
             catch (Exception ex) when (!(ex is BasicException))

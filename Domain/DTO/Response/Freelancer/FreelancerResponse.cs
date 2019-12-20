@@ -21,5 +21,6 @@ namespace Domain.DTO.Response.Freelancer
         public string Email { get; set; }
         public bool Active { get; set; }
         public virtual FreelancerAdressResponse FreelancerAdressResponse { get; set; }
+        public virtual IEnumerable<FreelancerFormationResponse> FreelancerFormationResponse { get; set; }
     }
 }

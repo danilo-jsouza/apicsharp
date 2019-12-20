@@ -1,6 +1,7 @@
 ﻿using Domain.Interface;
 using Domain.Models;
 using Domain.Models.Adress;
+using Domain.Models.Formation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
@@ -28,6 +29,8 @@ namespace Infra.Data.Context
         public DbSet<FreelancerAdress> FreelancerAdresses { get; set; }
         public DbSet<HomeOfficeAdress> HomeOfficeAdresses { get; set; }
         public DbSet<PhysicalPersonAdress> PhysicalPersonAdresses { get; set; }
+        public DbSet<FreelancerFormation> FreelancerFormations { get; set; }
+        public DbSet<HomeOfficeFormation> HomeOfficeFormations { get; set; }
         #endregion
 
         private void ConfigureEntities(ModelBuilder modelBuilder)
@@ -59,6 +62,20 @@ namespace Infra.Data.Context
                 physicalPersonAdresses
                     .HasOne(phyPerAdr => phyPerAdr.PhysicalPerson)
                     .WithOne(phyPer => phyPer.PhysicalPersonAdress);
+            });
+
+            modelBuilder.Entity<HomeOffice>(homeOffice =>
+            {
+                homeOffice
+                    .HasMany(hom => hom.HomeOfficeFormation)
+                    .WithOne(homFor => homFor.HomeOffice);
+            });
+
+            modelBuilder.Entity<Freelancer>(freelancer =>
+            {
+                freelancer
+                    .HasMany(free => free.FreelancerFormation)
+                    .WithOne(freeFor => freeFor.Freelancer);
             });
             #endregion
 

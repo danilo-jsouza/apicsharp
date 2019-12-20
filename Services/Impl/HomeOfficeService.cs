@@ -3,6 +3,7 @@ using Domain.DTO.Response.HomeOffice;
 using Domain.Exceptions;
 using Domain.Models;
 using Domain.Models.Adress;
+using Domain.Models.Formation;
 using Infra.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services.Interface;
@@ -49,7 +50,15 @@ namespace Services.Impl
                         {
                             State = homeOfficeRequest.HomeOfficeAdressRequest.State,
                             City = homeOfficeRequest.HomeOfficeAdressRequest.City
-                        }
+                        },
+                        HomeOfficeFormation = homeOfficeRequest.HomeOfficeFormationRequest.Select(homForm => new HomeOfficeFormation
+                        {
+                            Type = homForm.Type,
+                            Course = homForm.Course,
+                            School = homForm.School,
+                            Start = homForm.Start,
+                            End = homForm.End
+                        })
                     };
                     _homeOffice.Add(homeOffice);
                     await _unit.CommitAsync(ct);
@@ -67,6 +76,14 @@ namespace Services.Impl
                     existingHomeOffice.Skills = homeOfficeRequest.Skills;
                     existingHomeOffice.HomeOfficeAdress.City = homeOfficeRequest.HomeOfficeAdressRequest.City;
                     existingHomeOffice.HomeOfficeAdress.State = homeOfficeRequest.HomeOfficeAdressRequest.State;
+                    existingHomeOffice.HomeOfficeFormation = homeOfficeRequest.HomeOfficeFormationRequest.Select(homForm => new HomeOfficeFormation
+                    {
+                        Type = homForm.Type,
+                        Course = homForm.Course,
+                        School = homForm.School,
+                        Start = homForm.Start,
+                        End = homForm.End
+                    });
                     _homeOffice.Update(existingHomeOffice);
                     await _unit.CommitAsync(ct);
                 }
@@ -87,7 +104,15 @@ namespace Services.Impl
                     {
                         State = existingHomeOffice.HomeOfficeAdress.State,
                         City = existingHomeOffice.HomeOfficeAdress.City
-                    }
+                    },
+                    HomeOfficeFormationResponse = existingHomeOffice.HomeOfficeFormation.Select(homForm => new HomeOfficeFormationResponse
+                    {
+                        Type = homForm.Type,
+                        Course = homForm.Course,
+                        School = homForm.School,
+                        Start = homForm.Start,
+                        End = homForm.End
+                    })
                 };
             }
             catch (Exception ex) when (!(ex is BasicException))
@@ -137,7 +162,15 @@ namespace Services.Impl
                     {
                         City = hom.HomeOfficeAdress.City,
                         State = hom.HomeOfficeAdress.State
-                    }
+                    },
+                    HomeOfficeFormationResponse = hom.HomeOfficeFormation.Select(homForm => new HomeOfficeFormationResponse
+                    {
+                        Type = homForm.Type,
+                        Course = homForm.Course,
+                        School = homForm.School,
+                        Start = homForm.Start,
+                        End = homForm.End
+                    })
                 }).ToListAsync(ct);
 
                 if (homeOffice == null)
@@ -177,7 +210,15 @@ namespace Services.Impl
                     {
                         State = homeOffice.HomeOfficeAdress.State,
                         City = homeOffice.HomeOfficeAdress.City
-                    }
+                    },
+                    HomeOfficeFormationResponse = homeOffice.HomeOfficeFormation.Select(homForm => new HomeOfficeFormationResponse
+                    {
+                        Type = homForm.Type,
+                        Course = homForm.Course,
+                        School = homForm.School,
+                        Start = homForm.Start,
+                        End = homForm.End
+                    })
                 };
             }
             catch (Exception ex) when (!(ex is BasicException))

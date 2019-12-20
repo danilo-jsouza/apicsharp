@@ -19,5 +19,6 @@ namespace Domain.DTO.Request.Freelancer
         public string Portfolio { get; set; }
         public string Email { get; set; }
         public virtual FreelancerAdressRequest FreelancerAdressRequest { get; set; }
+        public virtual IEnumerable<FreelancerFormationRequest> FreelancerFormationRequest { get; set; }
     }
 }

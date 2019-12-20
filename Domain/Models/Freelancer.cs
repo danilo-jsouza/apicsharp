@@ -2,6 +2,7 @@
 using Domain.Models.Adress;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -16,5 +17,6 @@ namespace Domain.Models
         public string Description { get; set; }
         public string Portfolio { get; set; }
         public virtual FreelancerAdress FreelancerAdress { get; set; }
+        public virtual IEnumerable<FreelancerFormation> FreelancerFormation { get; set; }
     }
 }
